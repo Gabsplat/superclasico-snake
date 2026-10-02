@@ -2,7 +2,20 @@
 
 Snake 3D con dos modos seleccionables dentro del juego: **Boca** (víbora azul y oro en La Bombonera, junta estrellas y copas) y **River** (personaje fálico cartoon con camiseta blanca y banda roja en El Monumental, junta fantasmitas). Ambos comparten reglas, controles y cámaras. Los récords y las preferencias se guardan por separado en `localStorage`.
 
+Publicado: https://gabsplat.github.io/superclasico-snake/
+
 Vista previa (solo tailnet): https://omarchy.tailff08b5.ts.net:28443
+
+## Publicar en GitHub Pages
+
+Pages sirve la rama `gh-pages`, que contiene solo el build:
+
+```sh
+pnpm build
+rm -rf /tmp/scs-pages && cp -r dist /tmp/scs-pages && touch /tmp/scs-pages/.nojekyll
+cd /tmp/scs-pages && git init -q -b gh-pages && git add -A && git commit -qm "Deploy build"
+git push -f https://github.com/Gabsplat/superclasico-snake.git gh-pages
+```
 
 ## Ejecutar
 
