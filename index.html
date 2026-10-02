@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="es-AR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="theme-color" content="#0b1320" />
+    <title>Superclásico Snake</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <script type="module" crossorigin src="./assets/index-BGQMzPWd.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-CjsCVR8v.css">
+  </head>
+  <body>
+    <div id="app" class="phase-menu mode-boca">
+      <canvas id="c" aria-label="Cancha de juego. Arrastrá para girar la cámara, pellizcá para hacer zoom."></canvas>
+      <div id="flash"></div>
+      <div id="floaters" aria-hidden="true"></div>
+      <div id="cheer" aria-live="polite"></div>
+
+      <header id="hud">
+        <div class="score-pill">
+          <i class="crest"></i>
+          <div class="score-text">
+            <b id="score">0</b>
+            <small>Récord <span id="best">0</span></small>
+          </div>
+        </div>
+        <div class="hud-right">
+          <button id="camBtn" class="chip" type="button" aria-label="Cambiar cámara">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h3l2-2h6l2 2h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+            <span id="camLabel">Cancha</span>
+          </button>
+          <button id="pauseBtn" class="chip icon" type="button" aria-label="Pausa">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1.5" fill="currentColor"/><rect x="14" y="5" width="4" height="14" rx="1.5" fill="currentColor"/></svg>
+          </button>
+        </div>
+        <a id="photoCredit" href="#" data-open-credits>Foto: <span id="photoCreditText">Uwebart · CC BY-SA 3.0</span></a>
+      </header>
+
+      <section id="menu" class="panel" aria-label="Menú principal">
+        <h1>Superclásico <span>Snake</span></h1>
+        <div class="modes" role="radiogroup" aria-label="Elegí equipo">
+          <button class="mode" data-mode="boca" role="radio" type="button">
+            <i class="crest boca"></i>
+            <span class="mode-text"><b>Boca</b><small>La Bombonera</small></span>
+            <em>Récord <span data-best="boca">0</span></em>
+          </button>
+          <button class="mode" data-mode="river" role="radio" type="button">
+            <i class="crest river"></i>
+            <span class="mode-text"><b>River</b><small>El Monumental</small></span>
+            <em>Récord <span data-best="river">0</span></em>
+          </button>
+        </div>
+        <button id="playBtn" class="primary" type="button">¡Jugar!</button>
+        <div class="row">
+          <button id="soundBtn" class="ghost" type="button">Sonido: sí</button>
+          <button id="fxBtn" class="ghost" type="button">Efectos: altos</button>
+          <button class="ghost" type="button" data-open-credits>Créditos</button>
+        </div>
+        <p class="hint desktop-only">Flechas o WASD · Espacio: pausa · C o 1–4: cámaras · Arrastrá para girar · Rueda para zoom</p>
+        <p class="hint touch-only">Arrastrá la cancha para girar · Pellizcá para zoom · Doble toque para recentrar</p>
+      </section>
+
+      <section id="pause" class="panel compact" aria-label="Pausa">
+        <h2>Pausa</h2>
+        <button id="resumeBtn" class="primary" type="button">Seguir</button>
+        <button id="pauseMenuBtn" class="ghost" type="button">Menú</button>
+      </section>
+
+      <section id="deathTop" aria-live="polite">
+        <b id="deathTitle">¡Uh!</b>
+        <span id="deathScore">0 puntos</span>
+        <em id="newRecord">¡Nuevo récord!</em>
+        <div id="replayInfo"><span id="replayLabel">Repetición</span><div class="bar"><i id="replayProgress"></i></div></div>
+      </section>
+
+      <nav id="deathBar" aria-label="Opciones de fin de partida">
+        <button id="restartBtn" class="primary" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4h4" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Reiniciar</span>
+        </button>
+        <button id="replayBtn" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+          <span>Replay</span>
+        </button>
+        <button id="deathCamBtn" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h3l2-2h6l2 2h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+          <span id="deathCamLabel">Auto</span>
+        </button>
+        <button id="skipBtn" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5v14l9-7zM15 5h3v14h-3z" fill="currentColor"/></svg>
+          <span>Omitir</span>
+        </button>
+        <button id="deathMenuBtn" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+          <span>Menú</span>
+        </button>
+      </nav>
+
+      <nav id="pad" aria-label="Controles de dirección">
+        <button data-dir="left" type="button" aria-label="Izquierda"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" /></svg></button>
+        <button data-dir="up" type="button" aria-label="Arriba"><svg viewBox="0 0 24 24"><path d="M5 15l7-7 7 7" /></svg></button>
+        <button data-dir="down" type="button" aria-label="Abajo"><svg viewBox="0 0 24 24"><path d="M5 9l7 7 7-7" /></svg></button>
+        <button data-dir="right" type="button" aria-label="Derecha"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" /></svg></button>
+      </nav>
+
+      <section id="credits" class="panel" aria-label="Créditos">
+        <h2>Créditos</h2>
+        <ul>
+          <li>
+            <b>La Bombonera</b>: fotografía panorámica
+            <a href="https://commons.wikimedia.org/wiki/File:Panorama_La_Bombonera_(Buenos_Aires,_Argentina)_looking_east.jpg" target="_blank" rel="noopener">“Panorama La Bombonera (Buenos Aires, Argentina) looking east”</a>,
+            de <a href="https://commons.wikimedia.org/wiki/User:Uwebart" target="_blank" rel="noopener">Uwebart</a> (Wikimedia Commons),
+            <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener">CC BY-SA 3.0</a>.
+          </li>
+          <li>
+            <b>El Monumental</b>: fotografía panorámica
+            <a href="https://commons.wikimedia.org/wiki/File:Panorama_Estadio_Monumental_(Buenos_Aires,_Argentina)_from_inside.jpg" target="_blank" rel="noopener">“Panorama Estadio Monumental (Buenos Aires, Argentina) from inside”</a>,
+            de <a href="https://commons.wikimedia.org/wiki/User:Uwebart" target="_blank" rel="noopener">Uwebart</a> (Wikimedia Commons),
+            <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener">CC BY-SA 3.0</a>.
+          </li>
+          <li>Ambas fotos se redujeron, recortaron, espejaron y proyectaron sobre un cilindro. Estas adaptaciones se comparten bajo la misma licencia CC BY-SA 3.0.</li>
+          <li><b>Three.js</b>, licencia MIT.</li>
+          <li>Personajes, coleccionables, cancha, tribunas, hinchada, texturas y sonidos se generan por código en este proyecto.</li>
+          <li>Juego de hinchas, sin afiliación con Boca Juniors ni con River Plate.</li>
+        </ul>
+        <button id="closeCredits" class="primary" type="button">Cerrar</button>
+      </section>
+
+      <div id="nogl" hidden>Este juego necesita WebGL. Probá con Safari o Chrome actualizados.</div>
+    </div>
+  </body>
+</html>
